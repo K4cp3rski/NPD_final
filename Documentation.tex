@@ -1,0 +1,49 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{hhline}
+\usepackage{hyperref}
+\usepackage[margin=0.6in]{geometry}
+\usepackage{appendix}
+\usepackage{caption}
+\usepackage{physics}
+\usepackage{verbatim}
+\setlength\parindent{0pt}
+
+
+\title{Documentation of NPD final assignment}
+\author{Kacper Cybiński}
+\date{\today}
+
+\renewcommand{\phi}{\varphi}
+
+\begin{document}
+
+\maketitle
+
+\section{Installation}
+
+\section{Code Overview}
+
+\subsection{\texttt{download.py}}
+\subsubsection{\texttt{get\_sheet\_links\_names}}
+This functions is fitted to crawl and return implicit links and names of the \verb|.xlsx| files from the  \href{https://www.gov.pl/web/finanse/udzialy-za-2020-r}{government stat website} used in this program.\\ \\
+The function's inner working:
+\begin{itemize}
+    \item Keyword arguments:
+    \begin{itemize}
+        \item \verb|year|, default value: 2019. This kwarg is responsible for choosing which year you want to download the files from. It is a simplified application, only restricted to scope of this program, because only sites with data for 2019 and 2020 have so similar urls.
+    \end{itemize}
+    \item Procedure:
+    \begin{itemize}
+        \item The procedure crawls webpage and collects all html segments containing href links
+        \item Then we cut this list looking for our characterically-shaped file links (36-character coded), as only 5 of those are among the links
+        \item Lastly we parse for according names, as we need those for saving the downloaded \verb|.xlsx| files.
+    \end{itemize}
+\end{itemize}
+
+\end{document}
