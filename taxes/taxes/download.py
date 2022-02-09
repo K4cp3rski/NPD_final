@@ -75,12 +75,13 @@ def download_sheet_series(sheets):
             
         p = pathlib.Path(filename)
         p = p.resolve()
-        print(p.joinpath(file_name).parent)
+        downloads_dir = p.joinpath(file_name).parent
+        print(downloads_dir)
           
         print( "%s downloaded!\n"%file_name )
   
     print ("All sheets downloaded!")
-    return
+    return downloads_dir
 
 if __name__ == '__main__':
 #     Zbieramy ze strony wsztstkie linki do arkuszy i ich nazwy
