@@ -6,3 +6,6 @@ bs4
 pathlib
 requests
 openpyxl
+fake_useragent
+dload
+zipfile
