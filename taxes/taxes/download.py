@@ -4,6 +4,7 @@ import requests
 from bs4 import BeautifulSoup 
 import re
 import os
+import codecs
   
 
 ''' 
@@ -49,7 +50,7 @@ def get_sheet_links_names(year=2019):
 
 
 def download_sheet_series(sheets): 
-  
+    sheets_dir = None
     for link, file_name in zip(sheets[0], sheets[1]): 
   
         '''iterate through all links in sheets 
@@ -76,12 +77,13 @@ def download_sheet_series(sheets):
         p = pathlib.Path(filename)
         p = p.resolve()
         downloads_dir = p.joinpath(file_name).parent
+        sheets_dir = downloads_dir
         print(downloads_dir)
           
         print( "%s downloaded!\n"%file_name )
   
     print ("All sheets downloaded!")
-    return downloads_dir
+    return sheets_dir
 
 if __name__ == '__main__':
 #     Zbieramy ze strony wsztstkie linki do arkuszy i ich nazwy
