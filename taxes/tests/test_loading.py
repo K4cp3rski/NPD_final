@@ -3,12 +3,7 @@ import pathlib
 import pandas as pd
 import pytest
 import taxes.download as dload
-from taxes.preprocessing import (  # noqa: E501
-    dload_to_df_list,
-    get_gov_dir,
-    gov_dir_to_names_dict,
-    names_dict_to_df_dict,
-)
+from taxes.loading import dload_to_df_list, get_gov_dir, gov_dir_to_names_dict, names_dict_to_df_dict  # noqa: E501
 
 gov_dir = {
     2019: (
