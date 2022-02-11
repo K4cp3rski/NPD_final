@@ -1,7 +1,6 @@
 import pathlib
 
 import pytest
-
 from taxes.download import download_sheet_series, get_sheet_links_names
 
 pytest_plugins = ["taxes.download"]
@@ -44,7 +43,7 @@ pytest_plugins = ["taxes.download"]
                     "20210211_Powiaty_za_2020.xlsx",
                     "20210215_Miasta_NPP_2_za_2020.xlsx",
                     "20210211_Metropolia_2020.xlsx",
-                    "20210211_Województwa_za_2020.xlsx",
+                    "20210211_Wojewodztwa_za_2020.xlsx",
                 ],
             ),
         ),
@@ -92,7 +91,7 @@ def test_get_sheet_links_names(year, res):
                     "20210211_Powiaty_za_2020.xlsx",
                     "20210215_Miasta_NPP_2_za_2020.xlsx",
                     "20210211_Metropolia_2020.xlsx",
-                    "20210211_Województwa_za_2020.xlsx",
+                    "20210211_Wojewodztwa_za_2020.xlsx",
                 ],
             ),
             5,

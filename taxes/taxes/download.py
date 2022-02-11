@@ -16,7 +16,7 @@ all the links and then download videos.
 """
 
 
-def get_sheet_links_names(year=2020):
+def get_sheet_links_names(year=2020, verb=False):
     # specify the URL of the archive here
     archive_url = f"https://www.gov.pl/web/finanse/udzialy-za-{year}-r"
     data_url = "https://www.gov.pl"
@@ -40,15 +40,17 @@ def get_sheet_links_names(year=2020):
 
     sheet_links = [data_url + link[r"href"] for link in links]
 
-    sheet_links = [
-        link
-        for link in sheet_links
-        if re.search("attachment", link) is not None  # noqa: E501
-    ]
+    sheet_links = [link for link in sheet_links if re.search("attachment", link) is not None]  # noqa: E501
 
     names = re.findall(r"[0-9].+\.xlsx", " ".join(names))
+    names_out = []
 
-    return sheet_links, names
+    for file_name in names:
+        if file_name == "20210211_Województwa_za_2020.xlsx":
+            file_name = "20210211_Wojewodztwa_za_2020.xlsx"
+        names_out.append(file_name)
+
+    return sheet_links, names_out
 
 
 def download_sheet_series(sheets, verb=False):
@@ -65,6 +67,10 @@ def download_sheet_series(sheets, verb=False):
         """iterate through all links in sheets
         and download them one by one"""
 
+        #  Here we unify the namespace
+        if file_name == "20210211_Województwa_za_2020.xlsx":
+            file_name = "20210211_Wojewodztwa_za_2020.xlsx"
+
         print("Downloading file: %s" % file_name)
 
         # create response object
@@ -75,23 +81,19 @@ def download_sheet_series(sheets, verb=False):
                 Fore.RED
                 + Back.WHITE
                 + "Downloaded webpage. Switching to mirror source..."
-                + Style.RESET_ALL
-            )
+                + Style.RESET_ALL  # noqa: E501
+            )  # noqa: E501
             link = mirror_url_dir + file_name
             r = requests.get(link, headers=headers)
             if verb:
                 print(r.content)
             # download started
-            with open(
-                pathlib.Path.cwd().joinpath("data", file_name), "wb"
-            ) as output:  # noqa: E501
+            with open(pathlib.Path.cwd().joinpath("data", file_name), "wb") as output:  # noqa: E501
                 output.write(r.content)
 
         else:
             # download started
-            with open(
-                pathlib.Path.cwd().joinpath("data", file_name), "wb"
-            ) as output:  # noqa: E501
+            with open(pathlib.Path.cwd().joinpath("data", file_name), "wb") as output:  # noqa: E501
                 output.write(r.content)
 
         p = pathlib.Path(filename)
@@ -128,16 +130,18 @@ def get_gus_stats(verb=False):
     links = soup.findAll("a")
     sheet_links = ["https://stat.gov.pl" + link[r"href"] for link in links]
 
-    sheet_links = [
-        link for link in sheet_links if re.search("2020.zip", link) is not None
-    ][0]
+    sheet_links = [link for link in sheet_links if re.search("2020.zip", link) is not None][0]  # noqa: E501
     if verb:
         print(sheet_links)
 
+    file_name = re.search("ludnosc.*", sheet_links).group()
+    print("Downloading file: %s" % file_name)
     dloaded = dload.save_unzip(sheet_links, str(filename), delete_after=True)
     elements = list(pathlib.Path(dloaded).glob("*"))
     elements = [el for el in elements if el.is_dir()][0]
     elements = elements.rename(filename.joinpath("gus"))
+    print(Fore.CYAN + "%s downloaded!\n" % file_name)
+    print(Style.RESET_ALL)
     if verb:
         print(elements)
     return elements
