@@ -65,6 +65,10 @@ def download_sheet_series(sheets, verb=False):
         """iterate through all links in sheets
         and download them one by one"""
 
+        #  Here we unify the namespace
+        if file_name == "20210211_Województwa_za_2020.xlsx":
+            file_name = "20210211_Wojewodztwa_za_2020.xlsx"
+
         print("Downloading file: %s" % file_name)
 
         # create response object
