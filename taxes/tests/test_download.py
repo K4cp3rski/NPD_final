@@ -1,7 +1,6 @@
 import pathlib
 
 import pytest
-
 from taxes.download import download_sheet_series, get_sheet_links_names
 
 pytest_plugins = ["taxes.download"]
