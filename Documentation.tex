@@ -15,13 +15,44 @@
 \setlength\parindent{0pt}
 
 
-\title{Documentation of NPD final assignment}
-\author{Kacper Cybiński}
+\title{\textit{Taxes} package documentation}
+\author{Kacper Cybinski}
 \date{\today}
 
 \renewcommand{\phi}{\varphi}
 
+\newcommand{\code}[1]{\texttt{#1}}
+
+\newenvironment{func}[1]
+    {\begin{center}
+    #1\\[1ex]
+    \begin{tabular}{|p{0.9\textwidth}|}
+    \hline\\
+    }
+    {
+    \\\\\hline
+    \end{tabular}
+    \end{center}
+    }
 \begin{document}
+
+\newenvironment{details}[3]
+    {The function's inner working:
+    \begin{itemize}
+    \item Keyword arguments: \begin{itemize}
+    #1
+    \end{itemize}
+    \item Procedure: \begin{itemize}
+    #2
+    \end{itemize}
+    \item Returns: \begin{itemize}
+    #3
+    \end{itemize}
+    \end{itemize}
+    }
+    {
+    \bigskip
+    }
 
 \maketitle
 
@@ -30,20 +61,62 @@
 \section{Code Overview}
 
 \subsection{\texttt{download.py}}
-\subsubsection{\texttt{get\_sheet\_links\_names}}
-This functions is fitted to crawl and return implicit links and names of the \verb|.xlsx| files from the  \href{https://www.gov.pl/web/finanse/udzialy-za-2020-r}{government stat website} used in this program.\\ \\
-The function's inner working:
-\begin{itemize}
-    \item Keyword arguments:
-    \begin{itemize}
-        \item \verb|year|, default value: 2019. This kwarg is responsible for choosing which year you want to download the files from. It is a simplified application, only restricted to scope of this program, because only sites with data for 2019 and 2020 have so similar urls.
-    \end{itemize}
-    \item Procedure:
-    \begin{itemize}
-        \item The procedure crawls webpage and collects all html segments containing href links
-        \item Then we cut this list looking for our characterically-shaped file links (36-character coded), as only 5 of those are among the links
-        \item Lastly we parse for according names, as we need those for saving the downloaded \verb|.xlsx| files.
-    \end{itemize}
-\end{itemize}
+\begin{func}{\texttt{get\_sheet\_links\_names}}
+This functions is fitted to crawl and return implicit links and names of the \code{.xlsx} files from the  \href{https://www.gov.pl/web/finanse/udzialy-za-2020-r}{government stat website} used in this program.
+\end{func}
+
+\begin{details}{
+\item \code{year}, default value: 2019. This kwarg is responsible for choosing which year you want to download the files from. It is a simplified application, only restricted to scope of this program, because only sites with data for 2019 and 2020 have so similar urls.
+}{
+\item The procedure crawls webpage and collects all html segments containing href links
+\item Then we cut this list looking for our characterically-shaped file links (36-character coded), as only 5 of those are among the links
+\item Lastly we parse for according names, as we need those for saving the downloaded \code{.xlsx} files.
+}{
+\item A tuple, with structure: \\tuple(\code{list\_of\_sheet\_links}, \code{list\_of\_corresponding\_sheet\_names})
+}
+\end{details}
+
+
+\begin{func}{\texttt{download\_sheet\_series}}
+This is the function that actually downloads the \code{.xslx} sheets from this \href{https://www.gov.pl/web/finanse/udzialy-za-2020-r}{government stat website} and puts it in directory $\sim/data/$ where all source \code{.xlsx} files will be stored.
+\end{func}
+
+\begin{details}{
+\item \code{sheets}, is a tuple(\code{list\_of\_sheet\_links}, \code{list\_of\_corresponding\_sheet\_names}) you would expect this to be extracted a result of function \texttt{get\_sheet\_links\_names}
+}{
+\item The program iterates through the list of links and corresponding names, and tries to download the files using \code{requests} package.
+\item The government website sometimes crashes and returns \code{.html} page instead of desired excel sheet, so that's why the needed files have been placed on \href{http://studenci.fuw.edu.pl/~kc427902/NPD_xlsx_mirror/}{external server}, which serves as a mirror download source.
+}{
+\item Path to a directory where all the downloaded files are located.
+}
+\end{details}
+
+\begin{func}{\texttt{get\_gus\_stats}}
+This is the function that fetches, downloads, and unzips the archive from GUS website, which we need for further program works
+\end{func}
+
+\begin{details}{
+\item No kwargs
+}{
+\item Parse the \href{https://stat.gov.pl/obszary-tematyczne/ludnosc/ludnosc/ludnosc-stan-i-struktura-ludnosci-oraz-ruch-naturalny-w-przekroju-terytorialnym-stan-w-dniu-31-12-2020,6,29.html}{gus website} looking for desired \code{.zip} archive.
+\item Download and unzip the archive using package \code{dload}. The archive is unpacked to a subdirectory of $\sim/data/$
+\item Rename the downloaded directory to \code{gus}
+}{
+\item Path to directory $\sim/data/gus/$, where desired \code{.xlsx} files can be found
+}
+\end{details}
 
 \end{document}
+
+% \begin{func}{\texttt{download\_sheet\_series}}
+% Fuck this shit I'm out
+% \end{func}
+
+% \begin{details}{
+% \item
+% }{
+% \item
+% }{
+% \item
+% }
+% \end{details}
