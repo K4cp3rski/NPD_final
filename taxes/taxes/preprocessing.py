@@ -85,6 +85,26 @@ def names_dict_to_df_dict(names, dir_sheets, verb=False):
     return df_dict
 
 
+def extract_and_zip_gus(gus_dir, verb=False):
+    """
+    Interesują nas tylko tabele:
+    * tabela3.xls -> Województwa
+    * tabela6.xls -> Powiaty
+    * tabela12.xls -> Gminy
+    """
+    tables = {"Wojewodztwa": "tabela03.xls", "Powiaty": "tabela06.xls", "Gminy": "tabela12.xls"}  # noqa: E501
+    gus_dir_files = list(gus_dir.glob("*.xls"))
+    for filename, key in zip(tables.values(), tables.keys()):
+        for file in gus_dir_files:
+            if filename == file.name:
+                tables[key] = file
+
+    for JST in tables.keys():
+        df = tables[JST]
+        tables[JST] = pd.read_excel(df, sheet_name=None)
+    return tables
+
+
 def dload_to_df_list(years, verb=False):
     print(Fore.GREEN + "Beginning download...\n" + Style.RESET_ALL)
     gov_dir, dir_sheets, gus_dir = get_gov_dir(years, verb)
@@ -101,12 +121,14 @@ def dload_to_df_list(years, verb=False):
 
     df_dict = names_dict_to_df_dict(names, dir_sheets, verb)
 
+    gus_zip = extract_and_zip_gus(gus_dir)
+
     if verb:
         print(df_dict[2020]["Gminy"].head())
 
     print(Fore.CYAN + "Ended preprocessing!" + Style.RESET_ALL)
 
-    return df_dict
+    return df_dict, gus_zip
 
 
 if __name__ == "__main__":

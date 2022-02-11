@@ -104,9 +104,18 @@ def test_names_dict_to_df_dict():
 
 @pytest.mark.parametrize("years", [[2019, 2020]])
 def test_dload_to_df_list(years):
-    df_dict = dload_to_df_list(years)
+    df_dict, gus_zip = dload_to_df_list(years)
     assert type(df_dict) == dict
     for key in df_dict.keys():
         assert type(df_dict[key]) == dict
         for sheet in df_dict[key].keys():
-            type(df_dict[key][sheet]) == pd.core.frame.DataFrame
+            assert type(df_dict[key][sheet]) == pd.core.frame.DataFrame
+
+    assert type(gus_zip) == dict
+    for key in gus_zip.keys():
+        assert type(gus_zip[key]) == dict
+        for spreadsheet in gus_zip[key].keys():
+            try:
+                assert type(gus_zip[key][spreadsheet]) == pd.core.frame.DataFrame  # noqa: E501
+            except KeyError:
+                assert type(gus_zip[key]) == pd.core.frame.DataFrame
