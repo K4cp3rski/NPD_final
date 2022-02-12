@@ -3,7 +3,12 @@ import pathlib
 import pandas as pd
 import pytest
 import taxes.download as dload
-from taxes.loading import dload_to_df_list, get_gov_dir, gov_dir_to_names_dict, names_dict_to_df_dict  # noqa: E501
+from taxes.loading import (  # noqa: E501
+    dload_to_df_list,
+    get_gov_dir,
+    gov_dir_to_names_dict,
+    names_dict_to_df_dict,
+)
 
 gov_dir = {
     2019: (
@@ -71,7 +76,9 @@ def mock_dload(sheets, verb):
 
 
 def mock_gus(verb):
-    pathlib.Path.mkdir(pathlib.Path.cwd().joinpath("data"), exist_ok=True)  # noqa: E501
+    pathlib.Path.mkdir(
+        pathlib.Path.cwd().joinpath("data"), exist_ok=True
+    )  # noqa: E501
     return gus_dir
 
 
@@ -111,6 +118,8 @@ def test_dload_to_df_list(years):
         assert type(gus_zip[key]) == dict
         for spreadsheet in gus_zip[key].keys():
             try:
-                assert type(gus_zip[key][spreadsheet]) == pd.core.frame.DataFrame  # noqa: E501
+                assert (
+                    type(gus_zip[key][spreadsheet]) == pd.core.frame.DataFrame
+                )  # noqa: E501
             except KeyError:
                 assert type(gus_zip[key]) == pd.core.frame.DataFrame

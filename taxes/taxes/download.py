@@ -40,7 +40,11 @@ def get_sheet_links_names(year=2020, verb=False):
 
     sheet_links = [data_url + link[r"href"] for link in links]
 
-    sheet_links = [link for link in sheet_links if re.search("attachment", link) is not None]  # noqa: E501
+    sheet_links = [
+        link
+        for link in sheet_links
+        if re.search("attachment", link) is not None
+    ]  # noqa: E501
 
     names = re.findall(r"[0-9].+\.xlsx", " ".join(names))
     names_out = []
@@ -88,12 +92,16 @@ def download_sheet_series(sheets, verb=False):
             if verb:
                 print(r.content)
             # download started
-            with open(pathlib.Path.cwd().joinpath("data", file_name), "wb") as output:  # noqa: E501
+            with open(
+                pathlib.Path.cwd().joinpath("data", file_name), "wb"
+            ) as output:  # noqa: E501
                 output.write(r.content)
 
         else:
             # download started
-            with open(pathlib.Path.cwd().joinpath("data", file_name), "wb") as output:  # noqa: E501
+            with open(
+                pathlib.Path.cwd().joinpath("data", file_name), "wb"
+            ) as output:  # noqa: E501
                 output.write(r.content)
 
         p = pathlib.Path(filename)
@@ -130,7 +138,11 @@ def get_gus_stats(verb=False):
     links = soup.findAll("a")
     sheet_links = ["https://stat.gov.pl" + link[r"href"] for link in links]
 
-    sheet_links = [link for link in sheet_links if re.search("2020.zip", link) is not None][0]  # noqa: E501
+    sheet_links = [
+        link for link in sheet_links if re.search("2020.zip", link) is not None
+    ][
+        0
+    ]  # noqa: E501
     if verb:
         print(sheet_links)
 

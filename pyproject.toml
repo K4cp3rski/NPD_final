@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"
 write_to = "taxes/version.py"
 
 [tool.black]
-line-length = 120
+line-length = 80
 target-version = ['py38']
 include = '\.pyi?$'
 exclude = '''
@@ -32,6 +32,6 @@ exclude = '''
 '''
 
 [tool.isort]
-line_length=120
+line_length=80
 profile="black"
 src_paths=["package"]
