@@ -7,6 +7,7 @@
 \usepackage[table,xcdraw]{xcolor}
 \usepackage{hhline}
 \usepackage{hyperref}
+\usepackage{placeins}
 \usepackage[margin=0.6in]{geometry}
 \usepackage{appendix}
 \usepackage{caption}
@@ -60,9 +61,10 @@
 
 \section{Code Overview}
 
-\subsection{\texttt{download.py}}
+\subsection{\code{download.py}}
+
 \begin{func}{\texttt{get\_sheet\_links\_names}}
-This functions is fitted to crawl and return implicit links and names of the \code{.xlsx} files from the  \href{https://www.gov.pl/web/finanse/udzialy-za-2020-r}{government stat website} used in this program.
+This functions is fitted to crawl and return implicit links and names of the \code{.xlsx} files from the  \href{https://www.gov.pl/web/finanse/udzialy-za-2020-r}{finance ministry website} used in this program.
 \end{func}
 
 \begin{details}{
@@ -98,7 +100,7 @@ This is the function that fetches, downloads, and unzips the archive from GUS we
 \begin{details}{
 \item No kwargs
 }{
-\item Parse the \href{https://stat.gov.pl/obszary-tematyczne/ludnosc/ludnosc/ludnosc-stan-i-struktura-ludnosci-oraz-ruch-naturalny-w-przekroju-terytorialnym-stan-w-dniu-31-12-2020,6,29.html}{gus website} looking for desired \code{.zip} archive.
+\item Parse the \href{https://stat.gov.pl/obszary-tematyczne/ludnosc/ludnosc/ludnosc-stan-i-struktura-ludnosci-oraz-ruch-naturalny-w-przekroju-terytorialnym-stan-w-dniu-31-12-2020,6,29.html}{stat bureau website} looking for desired \code{.zip} archive.
 \item Download and unzip the archive using package \code{dload}. The archive is unpacked to a subdirectory of $\sim/data/$
 \item Rename the downloaded directory to \code{gus}
 }{
@@ -106,9 +108,39 @@ This is the function that fetches, downloads, and unzips the archive from GUS we
 }
 \end{details}
 
+\subsection{\code{loading.py}}
+\begin{func}{\code{get\_gov\_dir}}
+One of the wrapper functions for the \code{download.py} module. This one is responsible for extracting spreadsheet links with respective names, and paths to directories where the downloaded files are stored. The output patterns can be traced precisely in the \code{test\_loading.py} file.
+\end{func}
+
+\begin{details}{
+\item \code{years}: assumed to be given a list $[2019, 2020]$.
+}{
+\item Create a dictionary to hold a pair of lists [\code{link\_to\_file}, \code{linked\_file\_name}] for each year separately.
+\item Download the sheets from \href{https://www.gov.pl/web/finanse/udzialy-za-2020-r}{finance ministry website}, and from \href{https://stat.gov.pl/obszary-tematyczne/ludnosc/ludnosc/ludnosc-stan-i-struktura-ludnosci-oraz-ruch-naturalny-w-przekroju-terytorialnym-stan-w-dniu-31-12-2020,6,29.html}{stat bureau website}
+}{
+\item Dictionary with links and names, path to data folder, path to gus folder.
+}
+\end{details}
+
+\begin{func}{\code{gov\_dir\_to\_names\_dict}}
+A follow-up function to \code{get\_gov\_dir}, takes as input its output dictionary, and replaces file links with class names. \\Class names are: ['Gminy', 'Powiaty', 'Miasta\_NPP', 'Metropolia', 'Wojewodztwa'].
+
+\end{func}
+
+\begin{details}{
+\item \code{names}: A dictionary with links and names, path to data folder, path to gus folder.
+}{
+\item
+}{
+\item
+}
+\end{details}
+
+
 \end{document}
 
-% \begin{func}{\texttt{download\_sheet\_series}}
+% \begin{func}{\code{download\_sheet\_series}}
 % Fuck this shit I'm out
 % \end{func}
 

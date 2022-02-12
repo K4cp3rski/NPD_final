@@ -3,7 +3,9 @@ import pathlib
 
 from setuptools import setup
 
-requirementPath = pathlib.Path(__file__).parent.resolve().joinpath("requirements.txt")  # noqa: E501
+requirementPath = (
+    pathlib.Path(__file__).parent.resolve().joinpath("requirements.txt")
+)  # noqa: E501
 install_requires = []
 if os.path.isfile(requirementPath):
     with open(requirementPath) as f:
