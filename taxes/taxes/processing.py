@@ -7,8 +7,16 @@ def calc_stats(JST, tmp, proc_working, ind):
     tmp["tot_taxed"] = int(
         tmp["working_age"] * proc_working + tmp["post_working_age"]
     )
-    tmp["work_proc"] = tmp["working_age"] / tmp["tot_taxed"] * 100
-    tmp["post_proc"] = tmp["post_working_age"] / tmp["tot_taxed"] * 100
+    tmp["work_proc"] = (
+        tmp["working_age"]
+        / (tmp["working_age"] + tmp["post_working_age"])
+        * 100
+    )
+    tmp["post_proc"] = (
+        tmp["post_working_age"]
+        / (tmp["working_age"] + tmp["post_working_age"])
+        * 100
+    )
     return tmp
 
 
@@ -27,8 +35,16 @@ def calc_stats_woj(JST, tmp, proc_working):
     tmp["tot_taxed"] = int(
         tmp["working_age"] * proc_working + tmp["post_working_age"]
     )
-    tmp["work_proc"] = tmp["working_age"] / tmp["tot_taxed"] * 100
-    tmp["post_proc"] = tmp["post_working_age"] / tmp["tot_taxed"] * 100
+    tmp["work_proc"] = (
+        tmp["working_age"]
+        / (tmp["working_age"] + tmp["post_working_age"])
+        * 100
+    )
+    tmp["post_proc"] = (
+        tmp["post_working_age"]
+        / (tmp["working_age"] + tmp["post_working_age"])
+        * 100
+    )
 
 
 def get_stats_gus(gus_zip, verb=1, proc_working=0.8):
@@ -71,6 +87,7 @@ def get_stats_gus(gus_zip, verb=1, proc_working=0.8):
                 JST_codes = JST_dropped
                 JST_names = JST_big.iloc[JST_codes.index]["Wyszczegolnienie"]
                 for name, ind in zip(JST_names, JST_codes.index):
+                    name = name.lower()
                     if verb >= 1:
                         print(Fore.CYAN + name + Style.RESET_ALL)
                     JST_smol[r"{}".format(str(name))] = {}
@@ -105,6 +122,7 @@ def get_stats_gus(gus_zip, verb=1, proc_working=0.8):
                 JST_codes = JST_dropped
                 JST_names = JST_big.iloc[JST_codes.index]["Wyszczegolnienie"]
                 for name, ind in zip(JST_names, JST_codes.index):
+                    name = name.lower()
                     if verb >= 1:
                         print(Fore.CYAN + name + Style.RESET_ALL)
                     JST_smol[r"{}".format(str(name))] = {}

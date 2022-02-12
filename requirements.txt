@@ -9,3 +9,6 @@ openpyxl
 fake_useragent
 dload
 zipfile
+line-profiler
+snakeviz
+memory-profiler
