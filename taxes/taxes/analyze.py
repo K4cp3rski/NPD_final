@@ -96,6 +96,74 @@ def get_med_income_powiaty(df_dict, stats_out, year=2019, verb=0):
     return powiaty_df
 
 
+def get_med_income_miasta_NPP(df_dict, stats_out, year=2019, verb=0):
+    share_proc = 10.25 / 100
+    prog = 0.17
+
+    powiaty = {}
+    pow_df = df_dict[year]["Miasta_NPP"]
+    wojewodztwa = df_dict[year]["Miasta_NPP"]["województwo"]
+    pow_df["Avg_income_yearly"] = ""
+    pow_df["Avg_income_monthly"] = ""
+
+    powiaty_df = {}
+    for x in wojewodztwa.unique():
+        powiaty[x] = df_dict[year]["Miasta_NPP"].loc[
+            df_dict[year]["Miasta_NPP"]["województwo"] == x
+        ]
+        powiaty[x] = powiaty[x].loc[powiaty[x]["ROZDZIAŁ"] == 75622]
+        pow_names = powiaty[x]
+        if verb > 0:
+            print(pow_names)
+
+        for powiat in list(pow_names["Nazwa JST"].unique()):
+            powiat_low = powiat.lower()
+            if verb > 0:
+                print(powiat)
+            try:
+                if x == "mazowieckie":
+                    x = "mazowiecke"
+                    if powiat_low == "m. st. warszawa":
+                        powiat_low = f"powiat {powiat_low}"
+                    else:
+                        powiat_low = f"powiat m. {powiat_low}"
+                    stats = stats_out["Powiaty"][x.capitalize()][powiat_low]
+                    x = "mazowieckie"
+                else:
+                    powiat_low = f"powiat m. {powiat_low}"
+                    stats = stats_out["Powiaty"][x.capitalize()][powiat_low]
+            except KeyError as err:
+                if verb == 1:
+                    print("KeyError", err, " not found :c")
+            rec = (
+                x.capitalize(),
+                stats,
+                int(
+                    list(
+                        pow_df[pow_df["Nazwa JST"] == powiat]["Dochody_Final"]
+                    )[0]
+                    / share_proc
+                    / prog
+                ),
+            )
+            pow_names.loc[
+                pow_names["Nazwa JST"] == powiat, "Avg_income_yearly"
+            ] = float(
+                (rec[2] * rec[1]["work_proc"])
+                / (rec[1]["tot_taxed"] * rec[1]["work_proc"])
+            )
+            pow_names.loc[
+                pow_names["Nazwa JST"] == powiat, "Avg_income_monthly"
+            ] = float(
+                (rec[2] * rec[1]["work_proc"])
+                / (rec[1]["tot_taxed"] * rec[1]["work_proc"])
+                / 12
+            )
+        powiaty_df[x] = powiaty[x]
+
+    return powiaty_df
+
+
 def get_med_income_gminy(df_dict, stats_out, year=2019, verb=0):
     share_proc = 39.34 / 100
     prog = 0.17
@@ -221,11 +289,15 @@ def get_med_income(df_dict, stats_out, years, verb=0):
         woj_df = get_med_income_woj(df_dict, stats_out, year, verb)
         pow_df = get_med_income_powiaty(df_dict, stats_out, year, verb)
         gminy_dict = get_med_income_gminy(df_dict, stats_out, year, verb)
+        miasta_NPP_df = get_med_income_miasta_NPP(
+            df_dict, stats_out, year, verb
+        )
         var = get_var(gminy_dict, df_dict, stats_out)
         med_income[year] = {
             "woj_df": woj_df,
             "pow_df": pow_df,
             "gminy_dict": gminy_dict,
+            "miasta_NPP_df": miasta_NPP_df,
             "var": var,
         }
     return med_income
